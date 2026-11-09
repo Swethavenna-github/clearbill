@@ -1,0 +1,79 @@
+{
+  "_notice": "SYNTHETIC DATA. Fictional patient, clinic and charges. Not real. For demo and testing only.",
+  "synthetic": true,
+  "bill_id": "B03",
+  "title": "Annual checkup billed to the patient",
+  "patient": {
+    "name": "Priya Raman",
+    "age": 41,
+    "occupation": "software tester",
+    "insurance": "employer plan, in-network"
+  },
+  "provider": {
+    "name": "Maple Street Family Clinic (fictional)",
+    "type": "primary care"
+  },
+  "date_of_service": "2026-03-19",
+  "diagnosis_codes_icd10": [
+    "Z00.00"
+  ],
+  "line_items": [
+    {
+      "line": 1,
+      "internal_code": "PC-PREV",
+      "description": "Preventive visit, adult",
+      "quantity": 1,
+      "charge": 260.0
+    },
+    {
+      "line": 2,
+      "internal_code": "LAB-PNL",
+      "description": "Routine blood panel",
+      "quantity": 1,
+      "charge": 140.0
+    },
+    {
+      "line": 3,
+      "internal_code": "IMM-FLU",
+      "description": "Flu vaccine",
+      "quantity": 1,
+      "charge": 45.0
+    }
+  ],
+  "total_charges": 445.0,
+  "insurance": {
+    "note": "Not billed to insurance",
+    "paid": 0.0,
+    "contractual_adjustment": 0.0
+  },
+  "patient_responsibility_as_billed": 445.0,
+  "arithmetic_check_total_minus_insurance": 445.0,
+  "bill_notes": "Patient was asked to pay the full amount. This was a routine preventive visit at an in-network clinic.",
+  "answer_key": [
+    {
+      "type": "preventive_service_billed_to_patient",
+      "lines": [
+        1,
+        2,
+        3
+      ],
+      "confidence": "medium",
+      "explain": "Routine preventive visit, labs and flu shot are normally covered with no patient cost at an in-network provider. The claim was not sent to insurance.",
+      "fix": "Ask the clinic to bill insurance; verify the plan covers preventive care",
+      "estimated_savings": 445.0
+    }
+  ],
+  "correct_patient_responsibility": 0.0,
+  "negotiation_context": {
+    "patient_monthly_budget": 50,
+    "clinic_rules": {
+      "min_monthly": 25,
+      "max_months": 12,
+      "preferred_months": 6,
+      "round_monthly_up_to": 25,
+      "interest": 0.0,
+      "can_waive_late_fees": true,
+      "financial_assistance_available": true
+    }
+  }
+}

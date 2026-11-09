@@ -1,0 +1,158 @@
+{
+  "_notice": "SYNTHETIC DATA. Fictional patient, clinic and charges. Not real. For demo and testing only.",
+  "synthetic": true,
+  "bill_id": "B09",
+  "title": "Cycling accident: emergency surgery, insurance denied (the hero bill)",
+  "patient": {
+    "name": "Ethan Cole",
+    "age": 34,
+    "occupation": "graphic designer and weekend cyclist",
+    "insurance": "employer plan, $4,500 yearly out-of-pocket maximum"
+  },
+  "provider": {
+    "name": "Riverbend Community Hospital (fictional)",
+    "type": "hospital emergency, surgery and inpatient"
+  },
+  "date_of_service": "2026-09-12",
+  "discharge_date": "2026-09-14",
+  "diagnosis_codes_icd10": [
+    "S72.001A"
+  ],
+  "line_items": [
+    {
+      "line": 1,
+      "internal_code": "ER-TRAUMA",
+      "description": "Emergency trauma team activation and facility fee",
+      "quantity": 1,
+      "charge": 6200.0
+    },
+    {
+      "line": 2,
+      "internal_code": "ER-PHY-TR",
+      "description": "Emergency physician trauma evaluation",
+      "quantity": 1,
+      "charge": 1850.0
+    },
+    {
+      "line": 3,
+      "internal_code": "RAD-CT3",
+      "description": "CT scan, head, chest and abdomen",
+      "quantity": 1,
+      "charge": 3180.0
+    },
+    {
+      "line": 4,
+      "internal_code": "RAD-CT3",
+      "description": "CT scan, head, chest and abdomen",
+      "quantity": 1,
+      "charge": 3180.0
+    },
+    {
+      "line": 5,
+      "internal_code": "OR-FEM",
+      "description": "Surgery: femur fracture repair with internal fixation",
+      "quantity": 1,
+      "charge": 14900.0
+    },
+    {
+      "line": 6,
+      "internal_code": "ANES",
+      "description": "Anesthesia (out-of-network physician group)",
+      "quantity": 1,
+      "charge": 2650.0
+    },
+    {
+      "line": 7,
+      "internal_code": "OR-IMPL",
+      "description": "Operating room supplies and surgical implant",
+      "quantity": 1,
+      "charge": 5400.0
+    },
+    {
+      "line": 8,
+      "internal_code": "RM-SEMI",
+      "description": "Hospital room and board, semi-private (nights)",
+      "quantity": 3,
+      "charge": 4350.0
+    },
+    {
+      "line": 9,
+      "internal_code": "RX-INP",
+      "description": "Pharmacy, inpatient",
+      "quantity": 1,
+      "charge": 1020.0
+    },
+    {
+      "line": 10,
+      "internal_code": "PT-EVAL",
+      "description": "Physical therapy evaluation",
+      "quantity": 1,
+      "charge": 380.0
+    }
+  ],
+  "total_charges": 43110.0,
+  "insurance": {
+    "note": "Claim denied: 'prior authorization not on file'",
+    "paid": 0.0,
+    "contractual_adjustment": 0.0
+  },
+  "patient_responsibility_as_billed": 43110.0,
+  "arithmetic_check_total_minus_insurance": 43110.0,
+  "bill_notes": "Admitted 2026-09-12 through the emergency department after being hit by a car. Discharged 2026-09-14. Insurer denied the claim for missing prior authorization. Hospital chart shows one CT scan.",
+  "answer_key": [
+    {
+      "type": "duplicate_charge",
+      "lines": [
+        3,
+        4
+      ],
+      "confidence": "high",
+      "explain": "CT scan billed twice; the chart shows one CT scan.",
+      "fix": "Remove line 4",
+      "estimated_savings": 3180.0
+    },
+    {
+      "type": "billed_for_extra_night",
+      "lines": [
+        8
+      ],
+      "confidence": "high",
+      "explain": "Admitted Sep 12, discharged Sep 14 is 2 nights, but 3 nights are billed.",
+      "fix": "Reduce room charge to 2 nights ($2,900)",
+      "estimated_savings": 1450.0
+    },
+    {
+      "type": "insurance_denial_emergency_prior_auth",
+      "lines": [],
+      "confidence": "medium",
+      "explain": "Emergency care generally cannot require prior authorization, so a denial for missing prior authorization is likely wrong.",
+      "fix": "Appeal the denial with the insurer and ask the hospital to rebill; confirm with the insurer",
+      "estimated_savings": null
+    },
+    {
+      "type": "out_of_network_balance_bill",
+      "lines": [
+        6
+      ],
+      "confidence": "medium",
+      "explain": "An out-of-network anesthesia group at an in-network hospital often cannot balance-bill beyond in-network cost sharing.",
+      "fix": "Ask insurer to reprocess line 6 at the in-network rate",
+      "estimated_savings": null
+    }
+  ],
+  "correct_patient_responsibility": 4500.0,
+  "correct_patient_responsibility_note": "Estimate if the insurer reprocesses the claim: the patient pays at most the $4,500 yearly out-of-pocket maximum. Corrected charges before insurance would be $38,480.00 (after removing the duplicate CT and the extra night).",
+  "corrected_total_charges": 38480.0,
+  "negotiation_context": {
+    "patient_monthly_budget": 200,
+    "clinic_rules": {
+      "min_monthly": 100,
+      "max_months": 24,
+      "preferred_months": 18,
+      "round_monthly_up_to": 50,
+      "interest": 0.0,
+      "can_waive_late_fees": true,
+      "financial_assistance_available": true
+    }
+  }
+}

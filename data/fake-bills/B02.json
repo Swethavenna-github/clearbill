@@ -1,0 +1,75 @@
+{
+  "_notice": "SYNTHETIC DATA. Fictional patient, clinic and charges. Not real. For demo and testing only.",
+  "synthetic": true,
+  "bill_id": "B02",
+  "title": "Urgent care, ankle sprain",
+  "patient": {
+    "name": "James Okafor",
+    "age": 34,
+    "occupation": "delivery driver",
+    "insurance": "PPO plan"
+  },
+  "provider": {
+    "name": "Lakeside Urgent Care (fictional)",
+    "type": "urgent care"
+  },
+  "date_of_service": "2026-07-02",
+  "diagnosis_codes_icd10": [
+    "S93.401A"
+  ],
+  "line_items": [
+    {
+      "line": 1,
+      "internal_code": "UC-VISIT",
+      "description": "Urgent care visit, moderate",
+      "quantity": 1,
+      "charge": 210.0
+    },
+    {
+      "line": 2,
+      "internal_code": "RAD-ANK3",
+      "description": "X-ray, ankle, 3 views",
+      "quantity": 1,
+      "charge": 185.0
+    },
+    {
+      "line": 3,
+      "internal_code": "DME-SPL",
+      "description": "Ankle splint",
+      "quantity": 1,
+      "charge": 65.0
+    }
+  ],
+  "total_charges": 460.0,
+  "insurance": {
+    "note": "Paid $300 on 2026-07-28",
+    "paid": 300.0,
+    "contractual_adjustment": 0.0
+  },
+  "patient_responsibility_as_billed": 460.0,
+  "arithmetic_check_total_minus_insurance": 160.0,
+  "bill_notes": "Statement balance still shows the full charges even though insurance paid $300.",
+  "answer_key": [
+    {
+      "type": "insurance_payment_not_applied",
+      "lines": [],
+      "confidence": "high",
+      "explain": "Insurance payment of $300 was received but not subtracted from the balance.",
+      "fix": "Balance should be $160.00",
+      "estimated_savings": 300.0
+    }
+  ],
+  "correct_patient_responsibility": 160.0,
+  "negotiation_context": {
+    "patient_monthly_budget": 40,
+    "clinic_rules": {
+      "min_monthly": 25,
+      "max_months": 12,
+      "preferred_months": 6,
+      "round_monthly_up_to": 25,
+      "interest": 0.0,
+      "can_waive_late_fees": true,
+      "financial_assistance_available": true
+    }
+  }
+}

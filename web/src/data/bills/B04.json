@@ -1,0 +1,77 @@
+{
+  "_notice": "SYNTHETIC DATA. Fictional patient, clinic and charges. Not real. For demo and testing only.",
+  "synthetic": true,
+  "bill_id": "B04",
+  "title": "MRI, lower back, with a surprise out-of-network charge",
+  "patient": {
+    "name": "Daniel Brooks",
+    "age": 47,
+    "occupation": "warehouse supervisor",
+    "insurance": "PPO plan"
+  },
+  "provider": {
+    "name": "Northgate Imaging Center (fictional, in-network)",
+    "type": "outpatient imaging"
+  },
+  "date_of_service": "2026-05-08",
+  "diagnosis_codes_icd10": [
+    "M54.50"
+  ],
+  "line_items": [
+    {
+      "line": 1,
+      "internal_code": "MRI-LSP",
+      "description": "MRI, lumbar spine",
+      "quantity": 1,
+      "charge": 1980.0
+    },
+    {
+      "line": 2,
+      "internal_code": "RAD-READ",
+      "description": "Radiologist interpretation (out-of-network physician group)",
+      "quantity": 1,
+      "charge": 310.0
+    },
+    {
+      "line": 3,
+      "internal_code": "CON-GAD",
+      "description": "Contrast material",
+      "quantity": 1,
+      "charge": 120.0
+    }
+  ],
+  "total_charges": 2410.0,
+  "insurance": {
+    "note": "Paid $1,500 on in-network lines; $400 contractual adjustment",
+    "paid": 1500.0,
+    "contractual_adjustment": 400.0
+  },
+  "patient_responsibility_as_billed": 510.0,
+  "arithmetic_check_total_minus_insurance": 510.0,
+  "bill_notes": "Radiologist group is out-of-network, billed separately at the full amount.",
+  "answer_key": [
+    {
+      "type": "out_of_network_balance_bill",
+      "lines": [
+        2
+      ],
+      "confidence": "medium",
+      "explain": "An out-of-network doctor at an in-network facility often cannot balance-bill the patient beyond in-network cost sharing (No Surprises Act).",
+      "fix": "Ask insurer to reprocess line 2 at the in-network rate; ask the clinic to hold the $310 balance bill",
+      "estimated_savings": 310.0
+    }
+  ],
+  "correct_patient_responsibility": 200.0,
+  "negotiation_context": {
+    "patient_monthly_budget": 50,
+    "clinic_rules": {
+      "min_monthly": 25,
+      "max_months": 12,
+      "preferred_months": 6,
+      "round_monthly_up_to": 25,
+      "interest": 0.0,
+      "can_waive_late_fees": true,
+      "financial_assistance_available": true
+    }
+  }
+}

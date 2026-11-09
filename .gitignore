@@ -1,0 +1,13 @@
+node_modules/
+.env
+.env.local
+dist/
+build/
+.next/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Not part of the submission
+mobile/
+*.pdf

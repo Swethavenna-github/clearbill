@@ -1,0 +1,99 @@
+{
+  "_notice": "SYNTHETIC DATA. Fictional patient, clinic and charges. Not real. For demo and testing only.",
+  "synthetic": true,
+  "bill_id": "B01",
+  "title": "Emergency visit, chest pain",
+  "patient": {
+    "name": "Maria Lopez",
+    "age": 52,
+    "occupation": "school teacher",
+    "insurance": "high-deductible plan, $4,000 deductible not yet met"
+  },
+  "provider": {
+    "name": "Riverbend Community Hospital (fictional)",
+    "type": "hospital emergency department"
+  },
+  "date_of_service": "2026-08-14",
+  "diagnosis_codes_icd10": [
+    "R07.9"
+  ],
+  "line_items": [
+    {
+      "line": 1,
+      "internal_code": "ER-FAC-3",
+      "description": "Emergency department facility fee, level 3",
+      "quantity": 1,
+      "charge": 1850.0
+    },
+    {
+      "line": 2,
+      "internal_code": "ER-PHY-3",
+      "description": "Emergency physician evaluation",
+      "quantity": 1,
+      "charge": 640.0
+    },
+    {
+      "line": 3,
+      "internal_code": "CARD-ECG",
+      "description": "Electrocardiogram (ECG), 12-lead",
+      "quantity": 1,
+      "charge": 412.0
+    },
+    {
+      "line": 4,
+      "internal_code": "CARD-ECG",
+      "description": "Electrocardiogram (ECG), 12-lead",
+      "quantity": 1,
+      "charge": 412.0
+    },
+    {
+      "line": 5,
+      "internal_code": "LAB-TROP",
+      "description": "Troponin blood test",
+      "quantity": 1,
+      "charge": 285.2
+    },
+    {
+      "line": 6,
+      "internal_code": "RAD-CXR",
+      "description": "Chest X-ray, 2 views",
+      "quantity": 1,
+      "charge": 248.0
+    }
+  ],
+  "total_charges": 3847.2,
+  "insurance": {
+    "note": "Deductible applied; plan paid nothing",
+    "paid": 0.0,
+    "contractual_adjustment": 0.0
+  },
+  "patient_responsibility_as_billed": 3847.2,
+  "arithmetic_check_total_minus_insurance": 3847.2,
+  "bill_notes": "Payment due in 30 days. Insurance paid $0 because the deductible is not met. The chart shows one ECG.",
+  "answer_key": [
+    {
+      "type": "duplicate_charge",
+      "lines": [
+        3,
+        4
+      ],
+      "confidence": "high",
+      "explain": "ECG billed twice for the same visit; the chart shows one ECG.",
+      "fix": "Remove line 4",
+      "estimated_savings": 412.0
+    }
+  ],
+  "correct_patient_responsibility": 3435.2,
+  "negotiation_context": {
+    "patient_monthly_budget": 150,
+    "clinic_rules": {
+      "min_monthly": 75,
+      "max_months": 24,
+      "preferred_months": 20,
+      "round_monthly_up_to": 25,
+      "interest": 0.0,
+      "can_waive_late_fees": true,
+      "financial_assistance_available": true
+    }
+  }
+}

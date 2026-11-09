@@ -1,0 +1,28 @@
+# Render Blueprint: deploys the Clearbill web app (patient screens at /, clinic dashboard at /clinic).
+# Secrets are marked sync: false, so Render asks you to type them in its dashboard. Nothing secret lives in this file.
+services:
+  - type: web
+    name: clearbill
+    runtime: node
+    rootDir: web
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/audit
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: PAYPAL_ENV
+        value: sandbox
+      - key: PAYPAL_CLIENT_ID
+        sync: false
+      - key: PAYPAL_CLIENT_SECRET
+        sync: false
+      - key: PAYPAL_SANDBOX_BUSINESS_EMAIL
+        sync: false
+      - key: PAYPAL_SANDBOX_PERSONAL_EMAIL
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: APP_URL
+        sync: false # set to the https URL Render gives you, e.g. https://clearbill.onrender.com

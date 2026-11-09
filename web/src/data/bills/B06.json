@@ -1,0 +1,63 @@
+{
+  "_notice": "SYNTHETIC DATA. Fictional patient, clinic and charges. Not real. For demo and testing only.",
+  "synthetic": true,
+  "bill_id": "B06",
+  "title": "Physical therapy, sessions billed that were not attended",
+  "patient": {
+    "name": "Tom Nguyen",
+    "age": 38,
+    "occupation": "electrician",
+    "insurance": "plan with visit limits"
+  },
+  "provider": {
+    "name": "Active Motion Physical Therapy (fictional)",
+    "type": "outpatient therapy"
+  },
+  "date_of_service": "2026-04-01",
+  "diagnosis_codes_icd10": [
+    "M25.511"
+  ],
+  "line_items": [
+    {
+      "line": 1,
+      "internal_code": "PT-SES",
+      "description": "Physical therapy session",
+      "quantity": 12,
+      "charge": 1740.0
+    }
+  ],
+  "total_charges": 1740.0,
+  "insurance": {
+    "note": "Not yet billed to insurance",
+    "paid": 0.0,
+    "contractual_adjustment": 0.0
+  },
+  "patient_responsibility_as_billed": 1740.0,
+  "arithmetic_check_total_minus_insurance": 1740.0,
+  "bill_notes": "Sign-in log shows 10 attended sessions between Apr 1 and May 15.",
+  "answer_key": [
+    {
+      "type": "billed_for_sessions_not_attended",
+      "lines": [
+        1
+      ],
+      "confidence": "high",
+      "explain": "12 sessions billed at $145 each, but the sign-in log shows 10.",
+      "fix": "Reduce to 10 sessions ($1,450)",
+      "estimated_savings": 290.0
+    }
+  ],
+  "correct_patient_responsibility": 1450.0,
+  "negotiation_context": {
+    "patient_monthly_budget": 100,
+    "clinic_rules": {
+      "min_monthly": 50,
+      "max_months": 12,
+      "preferred_months": 6,
+      "round_monthly_up_to": 25,
+      "interest": 0.0,
+      "can_waive_late_fees": true,
+      "financial_assistance_available": true
+    }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "_notice": "SYNTHETIC DATA. Fictional patient, clinic and charges. Not real. For demo and testing only.",
+  "synthetic": true,
+  "bill_id": "B05",
+  "title": "Appendectomy, hospital stay billed for an extra night",
+  "patient": {
+    "name": "Aisha Khan",
+    "age": 29,
+    "occupation": "graphic designer",
+    "insurance": "plan with 20% coinsurance"
+  },
+  "provider": {
+    "name": "St. Anselm Medical Center (fictional)",
+    "type": "hospital inpatient"
+  },
+  "date_of_service": "2026-02-03",
+  "diagnosis_codes_icd10": [
+    "K35.80"
+  ],
+  "line_items": [
+    {
+      "line": 1,
+      "internal_code": "RM-SEMI",
+      "description": "Hospital room and board, semi-private (nights)",
+      "quantity": 3,
+      "charge": 4350.0
+    },
+    {
+      "line": 2,
+      "internal_code": "OR-SRG",
+      "description": "Surgical procedure, laparoscopic appendectomy",
+      "quantity": 1,
+      "charge": 7800.0
+    },
+    {
+      "line": 3,
+      "internal_code": "ANES",
+      "description": "Anesthesia",
+      "quantity": 1,
+      "charge": 1900.0
+    },
+    {
+      "line": 4,
+      "internal_code": "OR-SUP",
+      "description": "Operating room supplies",
+      "quantity": 1,
+      "charge": 2300.0
+    },
+    {
+      "line": 5,
+      "internal_code": "LAB-INP",
+      "description": "Laboratory tests",
+      "quantity": 1,
+      "charge": 960.0
+    },
+    {
+      "line": 6,
+      "internal_code": "RX-INP",
+      "description": "Pharmacy, inpatient",
+      "quantity": 1,
+      "charge": 740.0
+    }
+  ],
+  "total_charges": 18050.0,
+  "insurance": {
+    "note": "Paid $12,400; contractual adjustment $3,000",
+    "paid": 12400.0,
+    "contractual_adjustment": 3000.0
+  },
+  "patient_responsibility_as_billed": 2650.0,
+  "arithmetic_check_total_minus_insurance": 2650.0,
+  "bill_notes": "Admitted 2026-02-03, discharged 2026-02-05. Room line shows 3 nights at $1,450 each. Total charges $18,050.",
+  "answer_key": [
+    {
+      "type": "billed_for_extra_night",
+      "lines": [
+        1
+      ],
+      "confidence": "high",
+      "explain": "Admitted Feb 3, discharged Feb 5 is 2 nights, but 3 nights are billed.",
+      "fix": "Reduce room charge to 2 nights ($2,900); have insurer reprocess",
+      "estimated_savings": 1450.0
+    }
+  ],
+  "correct_patient_responsibility": null,
+  "negotiation_context": {
+    "patient_monthly_budget": 200,
+    "clinic_rules": {
+      "min_monthly": 100,
+      "max_months": 24,
+      "preferred_months": 12,
+      "round_monthly_up_to": 50,
+      "interest": 0.0,
+      "can_waive_late_fees": true,
+      "financial_assistance_available": true
+    }
+  },
+  "discharge_date": "2026-02-05"
+}

@@ -1,0 +1,87 @@
+{
+  "_notice": "SYNTHETIC DATA. Fictional patient, clinic and charges. Not real. For demo and testing only.",
+  "synthetic": true,
+  "bill_id": "B08",
+  "title": "Screening colonoscopy coded as diagnostic",
+  "patient": {
+    "name": "Marcus Hill",
+    "age": 50,
+    "occupation": "bus driver",
+    "insurance": "employer plan, in-network"
+  },
+  "provider": {
+    "name": "Cedar Valley Endoscopy Center (fictional)",
+    "type": "outpatient surgery center"
+  },
+  "date_of_service": "2026-09-01",
+  "diagnosis_codes_icd10": [
+    "Z12.11"
+  ],
+  "line_items": [
+    {
+      "line": 1,
+      "internal_code": "GI-COL",
+      "description": "Colonoscopy procedure",
+      "quantity": 1,
+      "charge": 1400.0
+    },
+    {
+      "line": 2,
+      "internal_code": "ANES",
+      "description": "Anesthesia",
+      "quantity": 1,
+      "charge": 520.0
+    },
+    {
+      "line": 3,
+      "internal_code": "PATH",
+      "description": "Pathology review",
+      "quantity": 1,
+      "charge": 380.0
+    },
+    {
+      "line": 4,
+      "internal_code": "FAC",
+      "description": "Facility fee",
+      "quantity": 1,
+      "charge": 900.0
+    }
+  ],
+  "total_charges": 3200.0,
+  "insurance": {
+    "note": "Paid $2,240 (processed as diagnostic, 30% coinsurance)",
+    "paid": 2240.0,
+    "contractual_adjustment": 0.0
+  },
+  "patient_responsibility_as_billed": 960.0,
+  "arithmetic_check_total_minus_insurance": 960.0,
+  "bill_notes": "Visit reason on referral: routine age-50 screening. Claim was filed as diagnostic.",
+  "answer_key": [
+    {
+      "type": "screening_coded_as_diagnostic",
+      "lines": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "confidence": "medium",
+      "explain": "A routine screening colonoscopy is usually covered at no patient cost, but this claim was coded as diagnostic, so coinsurance was applied. Cost sharing can still apply if a polyp was removed, depending on the plan.",
+      "fix": "Ask the clinic to review the claim coding; ask insurer to reprocess as screening",
+      "estimated_savings": 960.0
+    }
+  ],
+  "correct_patient_responsibility": 0.0,
+  "negotiation_context": {
+    "patient_monthly_budget": 80,
+    "clinic_rules": {
+      "min_monthly": 50,
+      "max_months": 12,
+      "preferred_months": 6,
+      "round_monthly_up_to": 25,
+      "interest": 0.0,
+      "can_waive_late_fees": true,
+      "financial_assistance_available": true
+    }
+  }
+}

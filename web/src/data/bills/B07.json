@@ -1,0 +1,66 @@
+{
+  "_notice": "SYNTHETIC DATA. Fictional patient, clinic and charges. Not real. For demo and testing only.",
+  "synthetic": true,
+  "bill_id": "B07",
+  "title": "Diabetes follow-up (clean control bill, no errors)",
+  "patient": {
+    "name": "Elena Petrova",
+    "age": 58,
+    "occupation": "retired librarian",
+    "insurance": "Medicare supplement"
+  },
+  "provider": {
+    "name": "Maple Street Family Clinic (fictional)",
+    "type": "primary care"
+  },
+  "date_of_service": "2026-06-10",
+  "diagnosis_codes_icd10": [
+    "E11.9"
+  ],
+  "line_items": [
+    {
+      "line": 1,
+      "internal_code": "PC-FUP",
+      "description": "Office visit, established patient",
+      "quantity": 1,
+      "charge": 180.0
+    },
+    {
+      "line": 2,
+      "internal_code": "LAB-A1C",
+      "description": "Hemoglobin A1C test",
+      "quantity": 1,
+      "charge": 55.0
+    },
+    {
+      "line": 3,
+      "internal_code": "LAB-LIP",
+      "description": "Lipid panel",
+      "quantity": 1,
+      "charge": 85.0
+    }
+  ],
+  "total_charges": 320.0,
+  "insurance": {
+    "note": "Paid $200; contractual adjustment $70",
+    "paid": 200.0,
+    "contractual_adjustment": 70.0
+  },
+  "patient_responsibility_as_billed": 50.0,
+  "arithmetic_check_total_minus_insurance": 50.0,
+  "bill_notes": "Bill is correct. Used to test that the agent does not invent errors.",
+  "answer_key": [],
+  "correct_patient_responsibility": 50.0,
+  "negotiation_context": {
+    "patient_monthly_budget": 25,
+    "clinic_rules": {
+      "min_monthly": 25,
+      "max_months": 12,
+      "preferred_months": 6,
+      "round_monthly_up_to": 25,
+      "interest": 0.0,
+      "can_waive_late_fees": true,
+      "financial_assistance_available": true
+    }
+  }
+}
