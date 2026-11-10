@@ -11,3 +11,8 @@ __pycache__/
 # Not part of the submission
 mobile/
 *.pdf
+
+# Android build outputs
+*.apk
+*.aab
+android-app/android/local.properties

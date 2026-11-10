@@ -78,7 +78,7 @@ export async function agentMessage(role: "patient" | "clinic", facts: string, fa
 }
 
 // ---------------- dashboard "ask" box ----------------
-export type PlanRow = { initials: string; balance: number; monthly: number; nextPayment: string; status: string; ageDays: number };
+export type PlanRow = { initials: string; plan: string; balance: number; monthly: number; nextPayment: string; status: string; ageDays: number };
 type Query = {
   status?: string;
   minBalance?: number;
@@ -102,9 +102,9 @@ function keywordQuery(q: string): Query {
   if (over) out.minBalance = Number(over[1].replace(/,/g, ""));
   const under = s.match(/(?:under|below|less than)\s*\$?([\d,]+)/);
   if (under) out.maxBalance = Number(under[1].replace(/,/g, ""));
-  const days = s.match(/(?:older than|over)\s*(\d+)\s*days/);
+  const days = s.match(/(?:older than|over|more than)\s*(\d+)\s*days/);
   if (days) out.minAgeDays = Number(days[1]);
-  if (/oldest|longest/.test(s)) Object.assign(out, { sortBy: "ageDays", sortDir: "desc" });
+  if (/oldest|longest|most overdue|most late/.test(s)) Object.assign(out, { sortBy: "ageDays", sortDir: "desc" });
   if (/biggest|largest|highest/.test(s)) Object.assign(out, { sortBy: "balance", sortDir: "desc" });
   return out;
 }
@@ -114,7 +114,7 @@ export async function askDashboard(question: string, plans: PlanRow[]) {
   let usedAI = false;
   if (llmConfigured()) {
     query = await llmJSON<Query>(
-      `A clinic billing manager asks: "${question.slice(0, 300)}"\nTurn it into a filter over a table of payment plans with columns: initials, balance (dollars), monthly (dollars), status (one of "On track","Late","New"), ageDays (how many days the balance is unpaid).\nReturn JSON with only these optional keys: status, minBalance, maxBalance, minAgeDays, maxAgeDays, sortBy ("balance"|"monthly"|"ageDays"), sortDir ("asc"|"desc"), limit (1-20). Use {} if the question does not map to the table.`,
+      `A clinic billing manager asks: "${question.slice(0, 300)}"\nTurn it into a filter over a table of payment plans with columns: initials, balance (dollars), monthly (dollars), status (one of "On track","Late","New"), ageDays (how many days past due the plan is; 0 means up to date).\nReturn JSON with only these optional keys: status, minBalance, maxBalance, minAgeDays, maxAgeDays, sortBy ("balance"|"monthly"|"ageDays"), sortDir ("asc"|"desc"), limit (1-20). Use {} if the question does not map to the table.`,
       { system: "You translate questions into table filters. Output JSON only.", timeoutMs: 12000, temperature: 0 },
     );
     usedAI = Boolean(query);
@@ -147,7 +147,7 @@ export async function askDashboard(question: string, plans: PlanRow[]) {
   rows = rows.slice(0, q.limit);
 
   const total = rows.reduce((s, r) => s + r.balance, 0);
-  const parts = [q.status && `status ${q.status}`, q.minBalance !== undefined && `balance over ${usd(q.minBalance)}`, q.maxBalance !== undefined && `balance under ${usd(q.maxBalance)}`, q.minAgeDays !== undefined && `unpaid over ${q.minAgeDays} days`].filter(Boolean);
+  const parts = [q.status && `status ${q.status}`, q.minBalance !== undefined && `balance over ${usd(q.minBalance)}`, q.maxBalance !== undefined && `balance under ${usd(q.maxBalance)}`, q.minAgeDays !== undefined && `more than ${q.minAgeDays} days past due`].filter(Boolean);
   // Numbers in the answer are computed here, never written by the AI.
   const answer = rows.length
     ? `${rows.length} plan${rows.length > 1 ? "s" : ""}${parts.length ? " with " + parts.join(", ") : ""}, ${usd(total)} outstanding in total.`

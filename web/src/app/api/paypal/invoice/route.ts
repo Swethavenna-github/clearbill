@@ -1,12 +1,12 @@
-import { getBill } from "@/lib/bills";
+import { resolveBill } from "@/lib/bills";
 import { auditBill, estimateShare } from "@/lib/audit";
 import { createInvoice, PayPalNotConfigured } from "@/lib/paypal";
 import { upsertCase } from "@/lib/store";
 
 export async function POST(req: Request) {
-  const { billId } = (await req.json()) as { billId: string };
-  const bill = getBill(billId);
-  if (!bill) return Response.json({ error: "Unknown bill" }, { status: 404 });
+  const body = await req.json();
+  const { bill, error } = resolveBill(body);
+  if (!bill) return Response.json({ error }, { status: 400 });
   const patientEmail = process.env.PAYPAL_SANDBOX_PERSONAL_EMAIL;
   if (!patientEmail) {
     return Response.json({ error: "Set PAYPAL_SANDBOX_PERSONAL_EMAIL in .env (the sandbox patient account email)." }, { status: 503 });

@@ -9,6 +9,27 @@
   --pink: #e5486f;
   --green: #1a9d62;
   --red: #d7263d;
+  /* AG Studio theme tokens (see app/clinic/billing/studio/theme.ts) */
+  --pp-ink: #1f2340;
+  --pp-muted: #5b6078;
+  --pp-border: #dad8ec;
+  --pp-gridline: #ebe9f7;
+  --pp-surface: #ffffff;
+  --pp-canvas: #ffffff;
+  --pp-highlight: #f1eeff;
+  --pp-blue: #6c4cf1;
+  --pp-navy: #1f2340;
+  --pp-font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --pp-chart-1: #6c4cf1;
+  --pp-chart-2: #0fa3a3;
+  --pp-chart-3: #f08a24;
+  --pp-chart-4: #e5486f;
+  --pp-chart-5: #1a9d62;
+  --pp-chart-6: #4a7de0;
+  --pp-chart-7: #9a6ad8;
+  --pp-chart-8: #c9a227;
+  --pp-chart-9: #6b7280;
+  --pp-chart-10: #d7263d;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
@@ -105,3 +126,61 @@ tr.live td { background: #f3f0ff; font-weight: 600; }
 .btn.sm { display: inline-block; width: auto; padding: 9px 14px; font-size: 14px; border-radius: 10px; }
 .logline { font-size: 13px; padding: 6px 0; border-bottom: 1px solid var(--bg); }
 .logline b { text-transform: capitalize; }
+
+/* ---------- sign-in, add bill, plus button ---------- */
+.chip { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.18); color: #fff; border: 0; border-radius: 999px; padding: 5px 10px 5px 5px; font-size: 12px; font-weight: 700; cursor: pointer; }
+.avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--purple); color: #fff; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.avatar.sm { width: 24px; height: 24px; font-size: 10px; background: #fff; color: var(--purple); }
+.usercard { display: flex; align-items: center; gap: 12px; width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 16px; padding: 12px; margin-bottom: 10px; cursor: pointer; font: inherit; color: inherit; }
+.usercard:active { border-color: var(--purple); }
+.fab { position: sticky; bottom: 18px; margin-left: auto; display: flex; align-items: center; justify-content: center; width: 58px; height: 58px; border-radius: 50%; border: 0; background: var(--teal); color: #fff; font-size: 34px; line-height: 1; box-shadow: 0 8px 20px rgba(15, 163, 163, 0.45); cursor: pointer; }
+.field { display: block; font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 10px; }
+.inp { display: block; width: 100%; margin-top: 4px; padding: 11px 12px; border-radius: 12px; border: 1px solid var(--line); font-size: 15px; font-family: inherit; background: #fff; color: var(--ink); }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.chargeRow { display: flex; gap: 6px; margin-bottom: 8px; }
+.chargeRow .inp { margin-top: 0; padding: 10px 8px; font-size: 14px; }
+.topbar .row h1 { margin: 0; }
+
+/* ---------- phone sign-in, register list, add sheet, scan ---------- */
+.phoneRow { display: flex; gap: 8px; margin-top: 4px; }
+.prefix { display: inline-flex; align-items: center; gap: 6px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); font-weight: 700; font-size: 15px; white-space: nowrap; }
+.phoneInp { margin-top: 0; flex: 1; min-width: 0; font-size: 18px; letter-spacing: 0.5px; }
+.sect { font-size: 12px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; color: var(--muted); margin: 14px 0 8px; }
+.thumb { width: 52px; height: 68px; object-fit: cover; border-radius: 8px; border: 1px solid var(--line); flex: none; }
+.bigthumb { display: block; width: 100%; max-height: 190px; object-fit: cover; object-position: top; border-radius: 14px; border: 1px solid var(--line); margin-bottom: 10px; }
+.sheetBack { position: fixed; inset: 0; background: rgba(20, 20, 40, 0.5); display: flex; align-items: flex-end; justify-content: center; z-index: 50; }
+.sheet { width: 100%; max-width: 430px; background: #fff; border-radius: 22px 22px 0 0; padding: 12px 18px calc(22px + env(safe-area-inset-bottom, 0px)); max-height: 92vh; overflow-y: auto; animation: rise 0.25s ease both; }
+@keyframes rise { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+.grab { width: 44px; height: 5px; border-radius: 5px; background: var(--line); margin: 0 auto 12px; }
+.sheetBtn { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; background: var(--bg); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; margin-bottom: 10px; font: inherit; color: inherit; cursor: pointer; }
+.sheetBtn .ico { font-size: 28px; width: 40px; text-align: center; }
+.scanBox { background: #fff; border-radius: 20px; padding: 22px 26px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.spin { width: 34px; height: 34px; border-radius: 50%; border: 4px solid var(--line); border-top-color: var(--purple); margin: 0 auto 10px; animation: rot 0.9s linear infinite; }
+@keyframes rot { to { transform: rotate(360deg); } }
+.chip { white-space: nowrap; flex: none; margin-left: 10px; }
+
+/* ---------- bottom tabs, EMI cards, cycle summary ---------- */
+.tabbar { position: sticky; bottom: 0; z-index: 30; display: flex; background: #fff; border-top: 1px solid var(--line); padding: 4px 6px calc(4px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -6px 18px rgba(60, 40, 160, 0.08); }
+.tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 7px 4px 5px; border: 0; background: transparent; color: var(--muted); font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; border-radius: 12px; }
+.tab .ti { font-size: 22px; line-height: 1; filter: grayscale(0.6); opacity: 0.8; }
+.tab.on { color: var(--purple); background: #f1eeff; }
+.tab.on .ti { filter: none; opacity: 1; }
+.track { background: var(--bg); border-radius: 999px; height: 10px; overflow: hidden; border: 1px solid var(--line); }
+.fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--purple)); border-radius: 999px; }
+.addcard { border: 2px dashed var(--line); border-radius: 16px; padding: 14px; background: #fff; margin-bottom: 12px; }
+.sumgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+.sum { background: var(--bg); border: 1px solid var(--line); border-radius: 14px; padding: 10px 8px; text-align: center; }
+.sum span { display: block; font-size: 11px; color: var(--muted); font-weight: 700; }
+.sum b { font-size: 16px; }
+.datebox { width: 48px; height: 52px; border-radius: 12px; background: #fff; border: 1px solid var(--line); display: flex; flex-direction: column; align-items: center; justify-content: center; flex: none; }
+.datebox b { font-size: 18px; line-height: 1; }
+.datebox span { font-size: 11px; color: var(--muted); font-weight: 700; text-transform: uppercase; }
+
+/* ---------- clinic tabs and registration form ---------- */
+.ctabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; border-bottom: 1px solid var(--line); }
+.ctab { border: 0; background: transparent; padding: 10px 14px; font: inherit; font-weight: 700; font-size: 14px; color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px; }
+.ctab.on { color: var(--purple); border-bottom-color: var(--purple); }
+.regform { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 6px; }
+
+/* AG Studio defaults to a 600px minimum box; let it fill the panel it sits in. */
+.cb-studio .ag-studio-root { width: 100%; height: 100%; }

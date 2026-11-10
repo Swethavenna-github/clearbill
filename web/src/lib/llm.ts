@@ -4,7 +4,7 @@ export function llmConfigured() {
   return Boolean(process.env.GEMINI_API_KEY);
 }
 
-type Opts = { system?: string; json?: boolean; timeoutMs?: number; temperature?: number };
+type Opts = { system?: string; json?: boolean; timeoutMs?: number; temperature?: number; image?: { mime: string; data: string } };
 
 export async function llmText(prompt: string, opts: Opts = {}): Promise<string | null> {
   const key = process.env.GEMINI_API_KEY;
@@ -13,7 +13,7 @@ export async function llmText(prompt: string, opts: Opts = {}): Promise<string |
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
   const body = JSON.stringify({
     ...(opts.system ? { systemInstruction: { parts: [{ text: opts.system }] } } : {}),
-    contents: [{ role: "user", parts: [{ text: prompt }] }],
+    contents: [{ role: "user", parts: [{ text: prompt }, ...(opts.image ? [{ inline_data: { mime_type: opts.image.mime, data: opts.image.data } }] : [])] }],
     generationConfig: {
       temperature: opts.temperature ?? 0.4,
       ...(opts.json ? { responseMimeType: "application/json" } : {}),

@@ -14,7 +14,7 @@ Each JSON file has: the printed bill, an `answer_key` of planted errors (for tes
 | B06 | Physical therapy, sessions billed that were not attended | Tom Nguyen | $1740.00 | billed_for_sessions_not_attended |
 | B07 | Diabetes follow-up (clean control bill, no errors) | Elena Petrova | $50.00 | none (control) |
 | B08 | Screening colonoscopy coded as diagnostic | Marcus Hill | $960.00 | screening_coded_as_diagnostic |
-| B09 | Cycling accident, emergency surgery, insurance denied (the hero bill) | Ethan Cole | $43,110.00 | duplicate_charge, billed_for_extra_night, insurance_denial_emergency_prior_auth, out_of_network_balance_bill |
+| B09 | Cycling accident, emergency surgery, insurance denied | Ethan Cole | $43,110.00 | duplicate_charge, billed_for_extra_night, insurance_denial_emergency_prior_auth, out_of_network_balance_bill |
 
 Notes
 - **B09 is the hero bill for the demo video** (Ethan, cycling accident, $43,110.00). B01 (Maria) is kept as a smaller backup sample. Ethan's plan: after insurance reprocessing his share is capped at $4,500; $4,500 over 18 months is $250 a month.

@@ -1,19 +1,19 @@
-import { getBill } from "@/lib/bills";
+import { resolveBill } from "@/lib/bills";
 import { auditBill, estimateShare } from "@/lib/audit";
 import { createInstallmentPlan, PayPalNotConfigured } from "@/lib/paypal";
 import { upsertCase } from "@/lib/store";
 
 export async function POST(req: Request) {
-  const { billId, monthly, months } = (await req.json()) as { billId: string; monthly: number; months: number };
-  const bill = getBill(billId);
-  if (!bill) return Response.json({ error: "Unknown bill" }, { status: 404 });
+  const body = await req.json();
+  const { bill, error } = resolveBill(body);
+  if (!bill) return Response.json({ error }, { status: 400 });
   const patientEmail = process.env.PAYPAL_SANDBOX_PERSONAL_EMAIL;
   if (!patientEmail) {
     return Response.json({ error: "Set PAYPAL_SANDBOX_PERSONAL_EMAIL in .env (the sandbox patient account email)." }, { status: 503 });
   }
   const target = estimateShare(bill, auditBill(bill)).amount;
-  const m = Math.round(Number(monthly) * 100) / 100;
-  const n = Math.round(Number(months));
+  const m = Math.round(Number(body.monthly) * 100) / 100;
+  const n = Math.round(Number(body.months));
   const rules = bill.negotiation_context.clinic_rules;
   if (!(m >= rules.min_monthly) || !(n >= 1) || n > rules.max_months) {
     return Response.json({ error: "That plan is outside the clinic's rules." }, { status: 400 });
@@ -33,8 +33,8 @@ export async function POST(req: Request) {
       patientFirst: first,
       patientLast: rest.join(" ") || "Patient",
       patientEmail,
-      returnUrl: `${appUrl}/?paid=1&bill=${bill.bill_id}`,
-      cancelUrl: `${appUrl}/?cancelled=1&bill=${bill.bill_id}`,
+      returnUrl: `${appUrl}/?paid=1&bill=${encodeURIComponent(bill.bill_id)}`,
+      cancelUrl: `${appUrl}/?cancelled=1&bill=${encodeURIComponent(bill.bill_id)}`,
     });
     upsertCase({ id: bill.bill_id, subscriptionId: plan.subscriptionId });
     return Response.json({ plan, monthly: m, months: n, lastPayment: same ? m : last });

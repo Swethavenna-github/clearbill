@@ -1,14 +1,14 @@
-import { getBill } from "@/lib/bills";
+import { resolveBill } from "@/lib/bills";
 import { auditBill, correctedCharges, estimateShare } from "@/lib/audit";
 import { negotiate } from "@/lib/negotiate";
 import { agentMessage } from "@/lib/ai";
 import { upsertCase } from "@/lib/store";
 
 export async function POST(req: Request) {
-  const { billId, budget } = (await req.json()) as { billId: string; budget: number };
-  const bill = getBill(billId);
-  if (!bill) return Response.json({ error: "Unknown bill" }, { status: 404 });
-  const monthlyBudget = Math.max(10, Math.round(Number(budget) || 0));
+  const body = await req.json();
+  const { bill, error } = resolveBill(body);
+  if (!bill) return Response.json({ error }, { status: 400 });
+  const monthlyBudget = Math.max(10, Math.min(5000, Math.round(Number(body.budget) || 0)));
 
   // The target is recomputed on the server so the browser cannot set it.
   const findings = auditBill(bill);
@@ -20,7 +20,7 @@ export async function POST(req: Request) {
 
   // Each agent says its decision in its own words. The numbers come from the rules.
   const facts =
-    `Patient: ${bill.patient.name}, ${bill.patient.age}, ${bill.patient.occupation}. Balance after corrections: $${share.amount}. ` +
+    `Patient: ${bill.patient.name}${bill.patient.age ? ", " + bill.patient.age : ""}${bill.patient.occupation ? ", " + bill.patient.occupation : ""}. Balance after corrections: $${share.amount}. ` +
     `Patient's monthly budget: $${monthlyBudget}. Clinic rules: preferred plan up to ${bill.negotiation_context.clinic_rules.preferred_months} months, longest ${bill.negotiation_context.clinic_rules.max_months} months, no interest.`;
   const spoken: typeof rounds = [];
   for (const r of rounds) {

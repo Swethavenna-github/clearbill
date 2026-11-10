@@ -14,11 +14,14 @@ export type CaseRecord = {
   status: "Flagged" | "Plan proposed" | "Clinic approved" | "Plan active";
   invoiceNumber?: string;
   subscriptionId?: string;
+  sample?: boolean; // fictional history shown so the clinic side is not empty; not counted in money totals
   updatedAt: string;
 };
 
+// ageDays means "days past due": 0 for a plan that is up to date, more for a late one.
 export type PlanRow = {
   initials: string;
+  plan: string;
   balance: number;
   monthly: number;
   nextPayment: string;
@@ -26,15 +29,16 @@ export type PlanRow = {
   ageDays: number;
 };
 
-// A few fictional accounts so the dashboard is not empty before the live demo case arrives.
+// A few fictional accounts for the clinic's other patients, so the dashboard is not empty. Ethan's plans come
+// from lib/plans.ts so the patient app and this dashboard show the same numbers.
 export const seededPlans: PlanRow[] = [
-  { initials: "J.O.", balance: 160, monthly: 40, nextPayment: "Nov 15", status: "On track", ageDays: 12 },
-  { initials: "A.K.", balance: 2650, monthly: 200, nextPayment: "Nov 18", status: "On track", ageDays: 28 },
-  { initials: "T.N.", balance: 1450, monthly: 100, nextPayment: "Nov 5", status: "Late", ageDays: 47 },
-  { initials: "D.B.", balance: 510, monthly: 50, nextPayment: "Nov 20", status: "On track", ageDays: 8 },
-  { initials: "E.P.", balance: 50, monthly: 25, nextPayment: "Nov 22", status: "On track", ageDays: 5 },
-  { initials: "R.M.", balance: 3200, monthly: 150, nextPayment: "Oct 28", status: "Late", ageDays: 78 },
-  { initials: "S.W.", balance: 980, monthly: 75, nextPayment: "Nov 9", status: "Late", ageDays: 104 },
+  { initials: "J.O.", plan: "Ankle sprain visit", balance: 160, monthly: 40, nextPayment: "Nov 15", status: "On track", ageDays: 0 },
+  { initials: "A.K.", plan: "Appendectomy stay", balance: 2650, monthly: 200, nextPayment: "Nov 18", status: "On track", ageDays: 0 },
+  { initials: "T.N.", plan: "Physical therapy", balance: 1450, monthly: 100, nextPayment: "Oct 24", status: "Late", ageDays: 17 },
+  { initials: "D.B.", plan: "Back MRI", balance: 510, monthly: 50, nextPayment: "Nov 20", status: "On track", ageDays: 0 },
+  { initials: "E.P.", plan: "Diabetes follow-up", balance: 50, monthly: 25, nextPayment: "Nov 22", status: "On track", ageDays: 0 },
+  { initials: "R.M.", plan: "Emergency visit", balance: 3200, monthly: 150, nextPayment: "Sep 23", status: "Late", ageDays: 48 },
+  { initials: "S.W.", plan: "Surgery deposit", balance: 980, monthly: 75, nextPayment: "Aug 28", status: "Late", ageDays: 74 },
 ];
 
 export const seededTotals = { billed: 61480, collected: 38210, corrected: 2140 };

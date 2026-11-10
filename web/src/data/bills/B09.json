@@ -2,7 +2,7 @@
   "_notice": "SYNTHETIC DATA. Fictional patient, clinic and charges. Not real. For demo and testing only.",
   "synthetic": true,
   "bill_id": "B09",
-  "title": "Cycling accident: emergency surgery, insurance denied (the hero bill)",
+  "title": "Cycling accident: emergency surgery, insurance denied",
   "patient": {
     "name": "Ethan Cole",
     "age": 34,
