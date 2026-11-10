@@ -3,8 +3,8 @@
   "appName": "Clearbill",
   "webDir": "www",
   "server": {
-    "url": "http://192.168.31.175:3000",
-    "cleartext": true,
+    "url": "https://clearbill-sm7c.onrender.com",
+    "cleartext": false,
     "errorPath": "index.html"
   },
   "android": {

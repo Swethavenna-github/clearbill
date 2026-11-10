@@ -1,33 +1,161 @@
-# Clearbill (working title)
+# Clearbill
 
-> Two AI agents settle a medical bill so the humans do not have to argue.
+> Two AI agents settle a medical bill so the humans do not have to argue. PayPal collects the money.
 
-In the US you get care first and the bill arrives weeks later. Clearbill is a working prototype that helps with that moment:
+Built for the **PayPal AI Hackathon (Build What's Next with PayPal and AI)**. One person, one codebase: a phone-first **patient app**, a **clinic website** with a billing desk and AG Studio dashboards, and a thin **Android app**.
 
-1. **Understand.** A patient opens a bill. Each line is explained in plain words. Rules plus an AI second opinion flag likely mistakes (a charge billed twice, an extra hospital night, a wrongly denied emergency claim).
-2. **Agree.** The patient sets a monthly budget. The patient's agent and the clinic's agent negotiate a plan. The numbers follow the clinic's rules; the AI writes what each agent says.
-3. **Pay with PayPal.** A PayPal invoice (with QR code) and a monthly installment plan are created in the PayPal sandbox. The clinic dashboard shows the plan, with an "ask your data" box that answers questions in plain English.
+- **Live demo:** https://clearbill-sm7c.onrender.com (patient app at `/`, clinic site at `/clinic`)
+- **Demo video:** link in the Devpost submission
+- **License:** MIT
 
-**Demo with fictional data only.** Read [COMPLIANCE.md](COMPLIANCE.md). Money is PayPal sandbox test money.
+**Everything in the demo is fictional.** All patients, bills, clinics and amounts are made up, and all money is PayPal **sandbox** test money. See [COMPLIANCE.md](COMPLIANCE.md).
 
-## What is in the repo
-- `web/`: the app (Next.js). Patient screens at `/`, clinic dashboard at `/clinic`.
-- `data/fake-bills/`: 8 synthetic bills with planted errors and an answer key. The hero bill is **B09 (Ethan, $43,110)**.
-- `render.yaml`: one-click deploy on Render.
-- `COMPLIANCE.md`: what this prototype is not, and what a real launch would need.
+---
 
-## Tools used
-| Tool | How it is used |
+## The problem
+
+In the US you get care first and the bill arrives weeks later. KFF's 2025 survey found that about 22% of US adults had trouble paying medical bills, and about 14% cut spending on basic household needs because of them. Bills are hard to read, mistakes are common, and many people either ignore the bill or pay a wrong amount without a plan.
+
+The story we built the demo around: **Ethan Cole** has a cycling accident, emergency surgery, and then a **$43,110** bill after his insurer denies the claim. He cannot pay that. He also cannot tell what is a real charge and what is a mistake.
+
+## What Clearbill does
+
+1. **Understand.** The patient opens a bill, or photographs one. Each line is explained in plain words. Rules plus an AI second opinion flag likely mistakes (a charge billed twice, an extra hospital night, a wrongly denied emergency claim).
+2. **Agree.** The patient sets a monthly budget. The **patient's agent** and the **clinic's agent** negotiate a plan inside the clinic's own rules. The numbers come from rules. The AI only writes what each agent says.
+3. **Pay with PayPal.** The plan becomes a real **PayPal sandbox subscription** (monthly installments), and the bill can also be sent as a **PayPal invoice with a QR code**. The patient approves on PayPal's own page.
+4. **The clinic sees it.** The clinic site shows the flagged bill, the agent conversation, the active plan, the money received, and dashboards of billing and collections.
+
+For Ethan the agents settle on **$250 a month for 18 months** against a fair share of **$4,500**.
+
+---
+
+## Try it (judges)
+
+No install needed. Use the live site.
+
+**Patient app** (`/`, best on a phone or a narrow window)
+1. Enter the demo phone number **123 456 789** (Ethan Cole).
+2. Open the hospital bill, review the flags, set a budget (try 250), and send the offer to the clinic's agent.
+3. Approve the plan. You go to PayPal's sandbox page.
+4. Sign in with the sandbox patient account (below), click **Continue**, then **Agree and Subscribe**.
+5. You return to Clearbill with "Your plan is active". Check the **Active EMIs** tab.
+
+**PayPal sandbox patient (buyer) login:** `sb-472mr153814445@personal.example.com`. The password is in the testing notes of the Devpost submission. This is a fake sandbox account.
+
+**Clinic site** (`/clinic/login`)
+- Billing admin: phone **987 654 321**, code **246810**. Sees everything.
+- Front desk: phone **987 654 322**, code **246810**. Sees patients and requests only, no amounts.
+
+(The sign-in code is shown on screen because this is a demo. A real launch would send a text message.)
+
+Clinic tabs: **Overview**, **Dashboard** (AG Studio), **Patients**, **Pending requests**, **Audit log**, plus the **Billing desk** (PayPal money, EMI plans, invoices) and **Billing analytics** (AG Studio over the PayPal data).
+
+**Other demo patients** (each sees only their own bill): Maria Lopez 555 010 0101, James Okafor 555 010 0102, Priya Raman 555 010 0103, Daniel Brooks 555 010 0104, Aisha Khan 555 010 0105, Elena Petrova 555 010 0106. Any number the clinic has not registered shows how a new patient is guided to ask the clinic to register.
+
+**Sample data:** to avoid empty screens, the clinic side is pre-filled with fictional patients, registration requests, flagged bills with agent conversations, EMI plans and six months of invoice history. Sample rows are marked (plan IDs start with `SAMPLE-`, invoice IDs with `SAMPLE-INV-`) and are not counted in the live money totals. Real PayPal sandbox invoices and plans you create appear alongside them.
+
+---
+
+## How we use PayPal
+
+PayPal is the center of the product, not an add-on. Everything below runs against the **PayPal sandbox** with a US sandbox business account (the clinic) and a US sandbox personal account (the patient).
+
+| PayPal API | Endpoint | What it does in Clearbill |
+|---|---|---|
+| OAuth 2.0 | `POST /v1/oauth2/token` | Server-side access token (client id and secret never reach the browser) |
+| **Subscriptions** | `POST /v1/catalogs/products`, `POST /v1/billing/plans`, `POST /v1/billing/subscriptions`, `GET /v1/billing/subscriptions/{id}` | The agreed plan becomes a real monthly installment plan. The last payment is the exact remainder so the total matches the balance. The patient approves on PayPal, and the app reads the live status (Active, next payment date, last payment) |
+| **Invoicing v2** | `GET .../generate-next-invoice-number`, `POST /v2/invoicing/invoices`, `POST .../send`, `POST .../generate-qr-code` | The corrected bill becomes a sent PayPal invoice with a QR code the patient can pay |
+| Reporting | `GET /v1/reporting/balances`, `GET /v1/reporting/transactions` | The clinic's **Billing desk** and analytics show money received, fees and balance (needs "Transaction search" switched on for the sandbox app) |
+| Invoicing and catalog reads | `GET /v2/invoicing/invoices`, `GET /v1/catalogs/products`, `GET /v1/billing/plans` | Feed the Billing desk table and the AG Studio billing analytics |
+
+The clinic's side is a **billing desk** built on the clinic's PayPal business account: EMI plans with live PayPal status, invoices, money received, and fees.
+
+### PayPal rules we checked
+
+- **Sandbox only.** No live money, no real card or bank data. Test accounts are US region, because an India-region sandbox account cannot send USD invoices.
+- **Acceptable Use Policy.** PayPal lists "Medical Items or Services" as an activity that needs **pre-approval**, and restricts payment facilitators and escrow-style services. So in a real launch **each clinic connects its own approved PayPal merchant account** and Clearbill never holds or pools funds. In the demo, the sandbox business account plays the clinic. Details in [COMPLIANCE.md](COMPLIANCE.md).
+- **Hackathon rules.** PayPal integration is central to the project (checked against the Official Rules). The project is original work, uses third-party SDKs and APIs only under their own licenses (listed below), has an open-source license (MIT), a hosted demo, test logins, and a video under three minutes with no third-party music.
+
+---
+
+## How we use AI
+
+**Model:** Google Gemini `gemini-3.5-flash-lite` through the Gemini API (free AI Studio tier), called from the server (`web/src/lib/llm.ts`). The sponsors do not supply a model, so this is our own choice.
+
+| Where | What the AI does | What does not use AI |
+|---|---|---|
+| Bill review | Writes a plain-language summary of each line, questions to ask the clinic, and up to two extra flags the rules might miss | The core mistake detection and the fair-share estimate are **rules** (`audit.ts`) |
+| Agents | Writes what the patient's agent and the clinic's agent say | The plan numbers (monthly amount, months, minimums, maximums, preferred length) come from **rules** (`negotiate.ts`) and the clinic's stated policy |
+| Bill photo scan | Reads a photo of a paper bill with Gemini vision (`/api/scan`) and turns it into a structured bill. The server re-validates it and runs the same rules | The photo is not stored |
+| "Ask your data" box | Turns a plain-English question into a filter over the payment plans (for example "Show late plans over $500") | The filtering itself is plain code over the data, and a keyword fallback works with no AI key |
+
+**The AI never decides money.** Rules decide the numbers, the AI explains and writes. If there is no AI key, the app still works with rule-based text.
+
+We did **not** use the Studio Agent Framework or a PayPal MCP server. We say so plainly so judges do not look for them.
+
+---
+
+## How we use the sponsor tools
+
+### AG Grid and AG Studio (Best Use of AG Grid)
+
+There is no separate submission for the AG Grid prize. Sponsor prizes are open to every eligible submission that uses the sponsor's tools, so this section is where we show it.
+
+**AG Studio** (`ag-studio` and `ag-studio-react` 3.0, from the sponsor's boilerplate) draws **every chart** in the clinic site:
+- **Dashboard tab** (`/clinic`, Dashboard): one AG Studio report with three pages, **Money** (billed, collected, outstanding, corrected, aging, billed vs collected, plan balances, plans grid), **Patients and requests** (visit types, registrations by month and staff, request status, patients grid) and **Care and activity** (flagged bills, savings, staff actions by type and person, flagged bills grid). Built in `web/src/app/clinic/dashboard-tab.tsx`.
+- **Overview tab:** the "unpaid balances by days past due" bar chart and the "billed vs collected" line chart (`clinic-studio.tsx`).
+- **Billing analytics** (`/clinic/billing/studio`): the full report over the PayPal sandbox data (invoices, payments, plans, ledger), with date filter, cross-filtering, KPI tiles with sparklines, a collection-rate gauge, a combo column and line chart, a sunburst, a bar chart, a donut and a pivot grid. Data model, relations, calendar and measures are in `web/src/app/clinic/billing/studio/`.
+- **Polish we added:** a custom theme tied to the app's design tokens (`studio/theme.ts` and the `--pp-*` variables in `globals.css`), a layout we tuned per page, hidden panels for a clean view mode, a page switcher, clearer chart types (we replaced a treemap and a radial chart that were hard to read), and sample history so the charts have something to show. Patients are shown by shortened name only and no phone numbers are passed to Studio.
+
+**AG Grid Community** (`ag-grid-community` and `ag-grid-react` 36) draws every table: the payment plans, patients, registration requests, audit log, ask-box results, and the Billing desk's EMI plans, invoices and transactions. The patients table masks names and numbers by default.
+
+The AG Studio trial watermark may show, because we use the free trial without a license key. Set `AG_STUDIO` to a trial key to remove it.
+
+### Render
+
+The app is hosted on **Render** as one Node web service (`render.yaml`, root directory `web`, Node 22). Secrets are typed into Render's dashboard and are never in the repo. Live: https://clearbill-sm7c.onrender.com.
+
+### Other tools
+
+| Tool | Use |
 |---|---|
-| **PayPal sandbox** (REST) | Invoicing API (create, send, QR code), Subscriptions API (installment plan and approval), subscription status check |
-| **Google Gemini** (`gemini-3.5-flash-lite`, free tier via AI Studio) | Plain-language bill summary and questions to ask, up to two extra flags, the two agents' wording, and the dashboard "ask" box (question to table filter) |
-| **AG Grid Community** | Plans table and ask-box results on the clinic dashboard |
-| **Render** | Hosting (see `render.yaml`) |
+| Next.js 16, React 19, TypeScript | The whole app, server routes included |
+| Capacitor 7 | Android wrapper that opens the live site full screen (`android-app/`). A debug APK is for testing only |
+| Google Gemini API | See "How we use AI" |
+| Claude Code | Used to build this project |
 
-The AI never decides money. Mistake detection and plan numbers are rules; the AI explains and writes. If no AI key is set, the app still works with rule-based text and a keyword fallback for the ask box.
+---
+
+## What we built during the hackathon
+
+The project was planned on Oct 27, 2026 and the first commit is Nov 9, 2026, both inside the submission period (Oct 1 to Nov 12). Everything here was built for this hackathon:
+
+- Patient app: phone sign-in, bill review, add a bill by camera, gallery, typing or sample photo, budget, agent negotiation, PayPal approval, tabs for Bills, Active EMIs and This cycle.
+- Clinic site: staff sign-in with roles, patient registration, registration requests, patient search, audit log, the "ask your data" box.
+- PayPal: invoices with QR, installment plans, live status, billing desk.
+- AG Studio dashboards and AG Grid tables (above).
+- Android wrapper, Render deploy, compliance notes.
+
+## Privacy and security safeguards (prototype level)
+
+Summarized from [COMPLIANCE.md](COMPLIANCE.md): staff sign-in with a one-time code, two roles (billing admin sees money, front desk does not), 20-minute sessions with 10-minute idle sign-out, lockout after five wrong codes, masked names and numbers with an audited "show details", an audit log that stores no patient data, patient registration only by request and staff approval, and patients can open only their own bills. **These show the shape of a real system. They do not make the prototype HIPAA compliant.** It is not a medical device, so FDA clearance does not apply.
+
+## Repository layout
+
+```
+web/                    Next.js app (patient app at /, clinic site at /clinic)
+  src/app/api/          route handlers: login, negotiate, paypal/*, scan, clinic/*, staff/*
+  src/app/clinic/       clinic site, AG Studio dashboards, billing desk
+  src/lib/              rules (audit, negotiate), AI (llm, ai, explain), PayPal (paypal, paypal-reports), stores
+data/fake-bills/        synthetic bills with planted errors and an answer key (hero: B09 Ethan, $43,110)
+android-app/            Capacitor Android wrapper
+render.yaml             Render service definition
+COMPLIANCE.md           what this is and is not, PayPal policy notes, safeguards
+```
 
 ## Run it yourself
-Requirements: Node 20+.
+
+Requirements: Node 20 or newer.
 
 ```bash
 cd web
@@ -38,15 +166,27 @@ npm run dev                     # http://localhost:3000
 ```
 
 Values for `.env`:
-- `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`: a PayPal **sandbox** app (developer.paypal.com > Apps & Credentials). Turn on **Subscriptions** and **Invoicing** for the app.
-- `PAYPAL_SANDBOX_BUSINESS_EMAIL`, `PAYPAL_SANDBOX_PERSONAL_EMAIL`: two sandbox accounts, **region United States** (an India-region sandbox account cannot send USD invoices).
-- `GEMINI_API_KEY` (optional): free key from aistudio.google.com.
-- `APP_URL`: `http://localhost:3000` locally, the public URL when deployed.
+- `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`: a PayPal **sandbox** app (developer.paypal.com, Apps and Credentials). Turn on Subscriptions and Invoicing. Turn on Transaction search to fill the balance and payments tiles.
+- `PAYPAL_ENV=sandbox`
+- `PAYPAL_SANDBOX_BUSINESS_EMAIL`, `PAYPAL_SANDBOX_PERSONAL_EMAIL`: two US-region sandbox accounts.
+- `GEMINI_API_KEY` (optional): free key from aistudio.google.com. Without it the app uses rule-based text.
+- `SESSION_SECRET`: any long random string (signs the staff cookie).
+- `APP_URL`: `http://localhost:3000` locally, the public address when deployed (PayPal returns patients here).
+- `AG_STUDIO` (optional): AG Studio trial license key.
 
-Try it: open `/`, choose Ethan, check the bill, set a budget, send it to the clinic's agent, approve, then approve the plan on PayPal's page by logging in as the sandbox personal account. Open `/clinic` in another tab to see the clinic side.
+Production build: `npm run build && npm start`.
 
-## Test accounts for judges
-See the Devpost submission notes for the sandbox patient login. Payments are test money only.
+**Deploy on Render:** connect the repo, set root directory `web`, build `npm install && npm run build`, start `npm start`, and add the variables above.
+
+**Android:** `android-app/` is a Capacitor project. Set the site address in `capacitor.config.json`, run `npx cap sync android`, then build with Gradle (`./gradlew assembleDebug`).
+
+## Honest limits
+
+- PayPal sandbox cannot reproduce real clinic payments or disputes.
+- Billing-error detection is a heuristic and can be wrong. The agent shows its reasoning and asks a person to confirm.
+- Server data (patients, requests, audit log) is held in memory in this prototype, so it resets when the service restarts. A real launch would use an encrypted database.
+- The Android app is a debug build for testing, not a store release.
 
 ## License
+
 MIT. See [LICENSE](LICENSE).
