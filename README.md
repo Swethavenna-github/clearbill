@@ -193,9 +193,21 @@ Production build: `npm run build && npm start`.
 ## Honest limits
 
 - PayPal sandbox cannot reproduce real clinic payments or disputes.
+- Testing is very limited (see the Testing section below).
 - Billing-error detection is a heuristic and can be wrong. The agent shows its reasoning and asks a person to confirm.
 - Server data (patients, requests, audit log) is held in memory in this prototype, so it resets when the service restarts. A real launch would use an encrypted database.
 - The Android app is a debug build for testing, not a store release.
+
+## Testing (very limited, please read)
+
+Testing for this prototype is **very limited**. It was built by one person in a short time, and it has not been through proper QA.
+
+- **No automated test suite.** The only test file in the repository is the default example that the Android template generated.
+- **What was checked:** the TypeScript type check and the production build pass. The main flows were tried by hand: patient sign-in, bill review, the two agents, the PayPal invoice and subscription with a sandbox buyer approving the plan, staff sign-in for both roles, patient registration and requests, the audit log, the "ask your data" box, and the AG Studio dashboards. The live site on Render was also tried by hand.
+- **Devices:** tried on desktop Chrome and one Samsung Android phone only. Not tested on iPhone or iOS Safari, Firefox, screen readers, or under heavy use.
+- **Rules and AI:** the mistake-detection rules were only run on the nine mock bills in `data/fake-bills/`. AI wording can vary between runs and has not been evaluated in any systematic way.
+- **PayPal:** tested only in the sandbox with one business and one buyer test account. Webhooks are not implemented (the app reads the plan status when asked), and later monthly charges were not observed.
+- **Expect rough edges.** If something looks broken, it may be a bug, not a design choice.
 
 ## License
 
