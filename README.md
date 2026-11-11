@@ -8,13 +8,17 @@ Built for the **PayPal AI Hackathon (Build What's Next with PayPal and AI)**. On
 - **Demo video:** link in the Devpost submission
 - **License:** MIT
 
-**Everything in the demo is fictional.** All patients, bills, clinics and amounts are made up, and all money is PayPal **sandbox** test money. See [COMPLIANCE.md](COMPLIANCE.md).
+> **IMPORTANT: this is a hackathon prototype, not a real product.** There is no app in any app store and no real service for patients or clinics.
+> - **All data is mock (fictional).** Every patient, clinic, bill, phone number and amount is made up. No real person's information and no protected health information (PHI) is collected, stored or used.
+> - **All money is PayPal sandbox test money.** No real payment is ever made.
+> - **Not HIPAA compliant, not a medical device, and not medical, legal or financial advice.** Do not use it with real patient data. See [COMPLIANCE.md](COMPLIANCE.md).
+> - The Android file in this repository is a debug test build that opens the demo website. It is not published anywhere.
 
 ---
 
 ## The problem
 
-In the US you get care first and the bill arrives weeks later. KFF's 2025 survey found that about 22% of US adults had trouble paying medical bills, and about 14% cut spending on basic household needs because of them. Bills are hard to read, mistakes are common, and many people either ignore the bill or pay a wrong amount without a plan.
+In the US you get care first and the bill arrives weeks later. KFF's Health Care Debt Survey found that about **41% of US adults (around 100 million people) carry debt from medical or dental bills** ([KFF](https://www.kff.org/health-costs/issue-brief/kff-health-care-debt-survey/)). Bills are hard to read, mistakes are common, and many people either ignore the bill or pay a wrong amount without a plan.
 
 The story we built the demo around: **Ethan Cole** has a cycling accident, emergency surgery, and then a **$43,110** bill after his insurer denies the claim. He cannot pay that. He also cannot tell what is a real charge and what is a mistake.
 

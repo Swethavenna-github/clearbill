@@ -16,3 +16,11 @@ mobile/
 *.apk
 *.aab
 android-app/android/local.properties
+
+# Video production files (large)
+video/film/
+video/final/
+video/images/
+video/clips/
+video/audio/
+video/combined/
