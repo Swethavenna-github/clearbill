@@ -124,7 +124,7 @@ The app is hosted on **Render** as one Node web service (`render.yaml`, root dir
 | Tool | Use |
 |---|---|
 | Next.js 16, React 19, TypeScript | The whole app, server routes included |
-| Capacitor 7 | Android wrapper that opens the live site full screen (`android-app/`). A debug APK is for testing only |
+| Capacitor 7 | Android wrapper that opens the live site full screen (`patient-android-app/`). A debug APK is for testing only |
 | Google Gemini API | See "How we use AI" |
 | Claude Code | Used to build this project |
 
@@ -144,18 +144,24 @@ The project was planned on Oct 27, 2026 and the first commit is Nov 9, 2026, bot
 
 Summarized from [COMPLIANCE.md](COMPLIANCE.md): staff sign-in with a one-time code, two roles (billing admin sees money, front desk does not), 20-minute sessions with 10-minute idle sign-out, lockout after five wrong codes, masked names and numbers with an audited "show details", an audit log that stores no patient data, patient registration only by request and staff approval, and patients can open only their own bills. **These show the shape of a real system. They do not make the prototype HIPAA compliant.** It is not a medical device, so FDA clearance does not apply.
 
-## Repository layout
+## Where things are
 
-```
-web/                    Next.js app (patient app at /, clinic site at /clinic)
-  src/app/api/          route handlers: login, negotiate, paypal/*, scan, clinic/*, staff/*
-  src/app/clinic/       clinic site, AG Studio dashboards, billing desk
-  src/lib/              rules (audit, negotiate), AI (llm, ai, explain), PayPal (paypal, paypal-reports), stores
-data/fake-bills/        synthetic bills with planted errors and an answer key (hero: B09 Ethan, $43,110)
-android-app/            Capacitor Android wrapper
-render.yaml             Render service definition
-COMPLIANCE.md           what this is and is not, PayPal policy notes, safeguards
-```
+| What | Where |
+|---|---|
+| **Patient app** (phone-first: bills, AI review, agents, PayPal approval, Active EMIs) | `web/src/app/page.tsx` |
+| **Clinic website** (sign-in, patients, requests, audit log) | `web/src/app/clinic/` |
+| **AG Studio dashboards** (clinic Dashboard tab, billing analytics) | `web/src/app/clinic/dashboard-tab.tsx`, `clinic-studio.tsx`, `web/src/app/clinic/billing/studio/` |
+| **Billing desk** (PayPal plans, invoices, money received) | `web/src/app/clinic/billing/` |
+| **PayPal code** (Subscriptions, Invoicing, Reporting) | `web/src/lib/paypal.ts`, `web/src/lib/paypal-reports.ts` |
+| **Rules** (mistake detection, plan negotiation limits) | `web/src/lib/audit.ts`, `web/src/lib/negotiate.ts` |
+| **AI** (Gemini: bill review, agents, scan, ask box) | `web/src/lib/llm.ts`, `web/src/lib/ai.ts`, `web/src/lib/explain.ts` |
+| **API routes** (login, negotiate, PayPal, scan, staff) | `web/src/app/api/` |
+| **Mock bills** (fictional, with planted errors) | `data/fake-bills/` |
+| **Android test app** (opens the patient app on a phone) | `patient-android-app/` |
+| **Deploy settings** (Render) | `render.yaml` |
+| **Privacy notes and limits** | `COMPLIANCE.md` |
+
+The patient app and the clinic website live in one Next.js app (`web/`) because they share the same bills, plans, rules and PayPal code.
 
 ## Run it yourself
 
@@ -182,7 +188,7 @@ Production build: `npm run build && npm start`.
 
 **Deploy on Render:** connect the repo, set root directory `web`, build `npm install && npm run build`, start `npm start`, and add the variables above.
 
-**Android:** `android-app/` is a Capacitor project. Set the site address in `capacitor.config.json`, run `npx cap sync android`, then build with Gradle (`./gradlew assembleDebug`).
+**Android:** `patient-android-app/` is a Capacitor project. Set the site address in `capacitor.config.json`, run `npx cap sync android`, then build with Gradle (`./gradlew assembleDebug`).
 
 ## Honest limits
 

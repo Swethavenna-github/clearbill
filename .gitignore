@@ -15,7 +15,7 @@ mobile/
 # Android build outputs
 *.apk
 *.aab
-android-app/android/local.properties
+patient-android-app/android/local.properties
 
 # Video production files (large)
 video/film/
