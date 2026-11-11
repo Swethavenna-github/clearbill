@@ -59,7 +59,7 @@ PayPal (Subscriptions, Invoicing, Reporting, sandbox), Google Gemini, AG Studio,
 ## Try it out (links)
 - Live demo: https://clearbill-sm7c.onrender.com
 - Source code: https://github.com/Swethavenna-github/clearbill (MIT license)
-- Video: (paste the YouTube link)
+- Video: https://youtu.be/E48VVr5sKc0
 
 ## Testing instructions (judges)
 Everything below is fictional demo data.

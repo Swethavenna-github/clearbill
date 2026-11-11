@@ -5,7 +5,7 @@
 Built for the **PayPal AI Hackathon (Build What's Next with PayPal and AI)**. One person, one codebase: a phone-first **patient app**, a **clinic website** with a billing desk and AG Studio dashboards, and a thin **Android app**.
 
 - **Live demo:** https://clearbill-sm7c.onrender.com (patient app at `/`, clinic site at `/clinic`)
-- **Demo video:** link in the Devpost submission
+- **Demo video (under 3 minutes):** https://youtu.be/E48VVr5sKc0
 - **License:** MIT
 
 > **IMPORTANT: this is a hackathon prototype, not a real product.** There is no app in any app store and no real service for patients or clinics.
